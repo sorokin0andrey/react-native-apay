@@ -1,6 +1,6 @@
 
 {
-  "name": "react-native-apple-pay",
+  "name": "react-native-apay",
   "version": "1.0.0",
   "description": "React Native bridge for Apple Pay",
   "main": "index.js",
@@ -19,7 +19,7 @@
   "nativePackage": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/busfor/react-native-apple-pay.git"
+    "url": "https://github.com/busfor/react-native-apay.git"
   },
   "peerDependencies": {
     "react-native": "^0.41.2"

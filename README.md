@@ -1,8 +1,8 @@
 
-# react-native-apple-pay
+# react-native-apay
 [![react-native version](https://img.shields.io/badge/react--native-0.41-0ba7d3.svg?style=flat-square)](https://github.com/facebook/react-native/releases/tag/v0.41.0)
-![npm](https://img.shields.io/npm/dw/react-native-apple-pay.svg?style=flat-square)
-[![npm (tag)](https://img.shields.io/npm/v/react-native-apple-pay/latest.svg?style=flat-square)](https://github.com/busfor/react-native-apple-pay/tree/master)
+![npm](https://img.shields.io/npm/dw/react-native-apay.svg?style=flat-square)
+[![npm (tag)](https://img.shields.io/npm/v/react-native-apay/latest.svg?style=flat-square)](https://github.com/busfor/react-native-apay/tree/master)
 
 Accept Payments with Apple Pay for React Native apps.
 
@@ -14,11 +14,11 @@ Accept Payments with Apple Pay for React Native apps.
 
 ## Getting started
 
-`$ yarn add react-native-apple-pay`
+`$ yarn add react-native-apay`
 
 ### Mostly automatic installation
 
-`$ react-native link react-native-apple-pay`
+`$ react-native link react-native-apay`
 
 ### Manual installation
 
@@ -26,14 +26,14 @@ Accept Payments with Apple Pay for React Native apps.
 #### iOS
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-apple-pay` and add `RNApplePay.xcodeproj`
+2. Go to `node_modules` ➜ `react-native-apay` and add `RNApplePay.xcodeproj`
 3. In XCode, in the project navigator, select your project. Add `libRNApplePay.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. Run your project (`Cmd+R`)<
 
 
 ## Usage
 ```javascript
-import { ApplePay } from 'react-native-apple-pay';
+import { ApplePay } from 'react-native-apay';
 
 const requestData = {
   merchantIdentifier: 'merchant.com.example',

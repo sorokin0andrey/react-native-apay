@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import { ApplePay, APayRequestDataType, APayPaymentStatusType } from 'react-native-apple-pay'
+import { ApplePay, APayRequestDataType, APayPaymentStatusType } from 'react-native-apay'
 
 const requestData: APayRequestDataType = {
   merchantIdentifier: 'merchant.com.payture.applepay.Busfor',
@@ -35,7 +35,7 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to react-native-apple-pay!</Text>
+        <Text style={styles.welcome}>Welcome to react-native-apay!</Text>
         <TouchableOpacity style={styles.button} onPress={() => this.payWithApplePay(ApplePay.SUCCESS)}>
           <Text style={styles.buttonText}>Buy with Apple Pay (SUCCESS)</Text>
         </TouchableOpacity>
