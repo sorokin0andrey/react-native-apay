@@ -1,0 +1,27 @@
+
+{
+  "name": "react-native-apple-pay",
+  "version": "1.0.0",
+  "description": "React Native bridge for Apple Pay",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "demo": "cd ./Example && yarn && react-native run-ios"
+  },
+  "keywords": [
+    "react-native",
+    "apple-pay",
+    "payments",
+    "pay"
+  ],
+  "author": "Andrey Sorokin <sorokin0andrey@gmail.com> (https://github.com/sorokin0andrey)",
+  "license": "MIT",
+  "nativePackage": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/busfor/react-native-apple-pay.git"
+  },
+  "peerDependencies": {
+    "react-native": "^0.41.2"
+  }
+}
