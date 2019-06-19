@@ -22,7 +22,8 @@ export default class App extends Component {
     if (ApplePay.canMakePayments) {
       ApplePay.requestPayment(requestData)
         .then((paymentData) => {
-          console.log(paymentData)
+          // In Sumilator always returns an empty string
+          console.log({ paymentData })
           // Simulate a request to the gateway
           setTimeout(() => {
             // Show status to user ApplePay.SUCCESS || ApplePay.FAILURE

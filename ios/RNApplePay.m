@@ -114,7 +114,7 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status) {
             [paymentSummaryItems addObject: [PKPaymentSummaryItem summaryItemWithLabel:label amount:amount]];
         }
     }
-
+    
     return paymentSummaryItems;
 }
 
@@ -124,7 +124,8 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status) {
 {
     self.completion = completion;
     if (self.requestPaymentResolve != NULL) {
-        self.requestPaymentResolve(payment.token);
+        NSString *paymentData = [[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding];
+        self.requestPaymentResolve(paymentData);
         self.requestPaymentResolve = NULL;
     }
 }
