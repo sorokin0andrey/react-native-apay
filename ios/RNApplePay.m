@@ -88,7 +88,11 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status) {
     if (@available(iOS 11.0, *)) {
         [supportedNetworksMapping setObject:PKPaymentNetworkCarteBancaires forKey:@"cartebancaires"];
     }
-
+    
+    if (@available(iOS 12.0, *)) {
+        [supportedNetworksMapping setObject:PKPaymentNetworkMaestro forKey:@"maestro"];
+    }
+    
     NSArray *supportedNetworksProp = props[@"supportedNetworks"];
     NSMutableArray *supportedNetworks = [NSMutableArray array];
     for (NSString *supportedNetwork in supportedNetworksProp) {
