@@ -50,16 +50,20 @@ const requestData = {
 
 // Check if ApplePay is available
 if (ApplePay.canMakePayments) {
-  ApplePay.requestPayment(requestData)
+  ApplePay.requestPayment(requestData);
     .then((paymentData) => {
-      console.log(paymentData)
+      console.log(paymentData);
       // Simulate a request to the gateway
       setTimeout(() => {
         // Show status to user ApplePay.SUCCESS || ApplePay.FAILURE
         ApplePay.complete(ApplePay.SUCCESS)
-      }, 1000)
-    })
-}
+          .then(() => {
+            console.log('completed');
+            // do something
+          });
+      }, 1000);
+    });
+};
 ```
 
 ## Demo

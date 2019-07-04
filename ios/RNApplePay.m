@@ -43,8 +43,9 @@ RCT_EXPORT_METHOD(requestPayment:(NSDictionary *)props promiseWithResolver:(RCTP
     });
 }
 
-RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status) {
+RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status promiseWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     if (self.completion != NULL) {
+        self.completeResolve = resolve;
         if ([status isEqualToNumber: self.constantsToExport[@"SUCCESS"]]) {
             self.completion(PKPaymentAuthorizationStatusSuccess);
         } else {
@@ -131,7 +132,14 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status) {
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(nonnull PKPaymentAuthorizationViewController *)controller {
-    [controller dismissViewControllerAnimated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [controller dismissViewControllerAnimated:YES completion:^void {
+            if (self.completeResolve != NULL) {
+                self.completeResolve(nil);
+                self.completeResolve = NULL;
+            }
+        }];
+    });
 }
 
 @end

@@ -28,6 +28,10 @@ export default class App extends Component {
           setTimeout(() => {
             // Show status to user ApplePay.SUCCESS || ApplePay.FAILURE
             ApplePay.complete(status)
+              .then(() => {
+                console.log('completed')
+                // do something
+              })
           }, 1000)
         })
     }
