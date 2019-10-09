@@ -16,9 +16,25 @@ Accept Payments with Apple Pay for React Native apps.
 
 `$ yarn add react-native-apay`
 
+## Linking 
+
+### >= 0.60
+
+Autolinking will just do the job.
+
+### < 0.60
+
 ### Mostly automatic installation
 
 `$ react-native link react-native-apay`
+
+### CocoaPods
+
+Link using [Cocoapods](https://cocoapods.org) by adding this to your `Podfile`:
+
+```ruby
+pod 'RNApplePay', :path => '../node_modules/react-native-apay'
+```
 
 ### Manual installation
 
