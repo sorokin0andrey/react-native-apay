@@ -138,6 +138,11 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status promiseWithResolver:(RCTPr
                 self.completeResolve(nil);
                 self.completeResolve = NULL;
             }
+
+            if (self.requestPaymentResolve != NULL) {
+                self.requestPaymentResolve(nil);
+                self.requestPaymentResolve = NULL;
+            }
         }];
     });
 }
