@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.license      = package['license']
   s.homepage     = 'https://github.com/sorokin0andrey/react-native-apay'
   s.author       = package['author']
-  s.platforms    = { :ios => "8.0", :tvos => "9.2" }
+  s.platforms    = { :ios => "10.0", :tvos => "10.0" }
   s.source       = { :git => "https://github.com/busfor/react-native-apay.git", :tag => s.version }
   s.source_files  = "ios/*.{h,m}"
   s.requires_arc = true
