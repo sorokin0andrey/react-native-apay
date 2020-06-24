@@ -34,18 +34,6 @@ RCT_EXPORT_METHOD(requestPayment:(NSDictionary *)props promiseWithResolver:(RCTP
     paymentRequest.supportedNetworks = [self getSupportedNetworks:props];
     paymentRequest.paymentSummaryItems = [self getPaymentSummaryItems:props];
 
-
-    if (@available(iOS 9.0, *)) {
-        paymentRequest.billingContact = [self getBillingContact:props];
-        paymentRequest.shippingContact = [self getBillingContact:props];
-    }
-
-    // if (@available(iOS 11.0, *)) {
-        paymentRequest.requiredBillingContactFields = [NSSet setWithArray:@[PKContactFieldName, PKContactFieldPhoneNumber]];
-        paymentRequest.requiredShippingContactFields = [NSSet setWithArray:@[PKContactFieldName, PKContactFieldPhoneNumber]];
-    // }
-
-
     self.viewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest: paymentRequest];
     self.viewController.delegate = self;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -129,25 +117,6 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status promiseWithResolver:(RCTPr
     }
     
     return paymentSummaryItems;
-}
-
-- (PKContact *_Nonnull)getBillingContact:(NSDictionary *_Nonnull)props
-{
-    PKContact *contact = [[PKContact alloc] init];
-
-    NSDictionary *rnContact = props[@"billingContact"];
-    contact.emailAddress = rnContact[@"emailAddress"];
-    contact.phoneNumber = [CNPhoneNumber phoneNumberWithStringValue: rnContact[@"phoneNumber"]];
-    
-    NSString *name = rnContact[@"name"];
-    if (name != NULL) {
-        NSPersonNameComponents *nameComponents = [[NSPersonNameComponents alloc] init];
-        nameComponents.givenName = name;
-        contact.name = nameComponents;
-    }
-    
-
-    return contact;
 }
 
 - (void) paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
