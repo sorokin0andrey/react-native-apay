@@ -93,6 +93,10 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status promiseWithResolver:(RCTPr
     if (@available(iOS 12.0, *)) {
         [supportedNetworksMapping setObject:PKPaymentNetworkMaestro forKey:@"maestro"];
     }
+
+    if (@available(iOS 14.0, *)) {
+            [supportedNetworksMapping setObject:PKPaymentNetworkMada forKey:@"mada"];
+        }
     
     NSArray *supportedNetworksProp = props[@"supportedNetworks"];
     NSMutableArray *supportedNetworks = [NSMutableArray array];

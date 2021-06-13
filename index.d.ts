@@ -1,4 +1,4 @@
-export type APayAllowedCardNetworkType = "amex" | "mastercard"| "visa" | "privatelabel" | "chinaunionpay" | "interac" | "jcb" | "suica" | "cartebancaires" | "idcredit" | "quicpay" | "maestro"
+export type APayAllowedCardNetworkType = "amex" | "mastercard"| "visa" | "privatelabel" | "chinaunionpay" | "interac" | "jcb" | "suica" | "cartebancaires" | "idcredit" | "quicpay" | "maestro" | "mada"
 
 export type APayPaymentStatusType = number
 
