@@ -5,6 +5,7 @@ export type APayPaymentStatusType = number
 export interface APayPaymentSummaryItemType {
   label: string
   amount: string
+  type: string
 }
 
 export interface APayRequestDataType {
