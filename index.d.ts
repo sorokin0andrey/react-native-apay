@@ -5,7 +5,7 @@ export type APayPaymentStatusType = number
 export interface APayPaymentSummaryItemType {
   label: string
   amount: string
-  type: string
+  pending: boolean
 }
 
 export interface APayRequestDataType {

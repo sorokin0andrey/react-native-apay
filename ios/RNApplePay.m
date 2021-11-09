@@ -111,7 +111,8 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status promiseWithResolver:(RCTPr
     if (displayItems.count > 0) {
         for (NSDictionary *displayItem in displayItems) {
             NSDecimalNumber *amount = [NSDecimalNumber decimalNumberWithString:displayItem[@"amount"]];
-            NSString *type = displayItem[@"type"];
+            NSString *pending = displayItem[@"pending"];
+            PKPaymentSummaryItemType *type = (pending ? PKPaymentSummaryItemTypePending : PKPaymentSummaryItemTypeFinal);
             NSString *label = displayItem[@"label"];
             [paymentSummaryItems addObject: [PKPaymentSummaryItem summaryItemWithLabel:label amount:amount type:type]];
         }
