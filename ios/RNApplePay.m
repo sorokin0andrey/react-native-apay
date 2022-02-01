@@ -61,17 +61,17 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status promiseWithResolver:(RCTPr
     
     if (@available(iOS 8, *)) {
         [supportedNetworksMapping setObject:PKPaymentNetworkAmex forKey:@"amex"];
-        [supportedNetworksMapping setObject:PKPaymentNetworkMasterCard forKey:@"mastercard"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkMasterCard forKey:@"masterCard"];
         [supportedNetworksMapping setObject:PKPaymentNetworkVisa forKey:@"visa"];
     }
     
     if (@available(iOS 9, *)) {
         [supportedNetworksMapping setObject:PKPaymentNetworkDiscover forKey:@"discover"];
-        [supportedNetworksMapping setObject:PKPaymentNetworkPrivateLabel forKey:@"privatelabel"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkPrivateLabel forKey:@"privateLabel"];
     }
     
     if (@available(iOS 9.2, *)) {
-        [supportedNetworksMapping setObject:PKPaymentNetworkChinaUnionPay forKey:@"chinaunionpay"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkChinaUnionPay forKey:@"chinaUnionPay"];
         [supportedNetworksMapping setObject:PKPaymentNetworkInterac forKey:@"interac"];
     }
     
@@ -81,23 +81,35 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status promiseWithResolver:(RCTPr
     }
     
     if (@available(iOS 10.3, *)) {
-        [supportedNetworksMapping setObject:PKPaymentNetworkCarteBancaire forKey:@"cartebancaires"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkCarteBancaires forKey:@"carteBancaires"];
         [supportedNetworksMapping setObject:PKPaymentNetworkIDCredit forKey:@"idcredit"];
         [supportedNetworksMapping setObject:PKPaymentNetworkQuicPay forKey:@"quicpay"];
     }
     
     if (@available(iOS 11.0, *)) {
-        [supportedNetworksMapping setObject:PKPaymentNetworkCarteBancaires forKey:@"cartebancaires"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkCartesBancaires forKey:@"cartesBancaires"];
     }
     
     if (@available(iOS 12.0, *)) {
         [supportedNetworksMapping setObject:PKPaymentNetworkMaestro forKey:@"maestro"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkEftpos forKey:@"eftpos"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkElectron forKey:@"electron"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkVPay forKey:@"vPay"];
+    }
+    
+    if (@available(iOS 15.0, *)) {
+        [supportedNetworksMapping setObject:PKPaymentNetworkElo forKey:@"elo"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkGirocard forKey:@"girocard"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkMada forKey:@"mada"];
+        [supportedNetworksMapping setObject:PKPaymentNetworkMir forKey:@"mir"];
     }
     
     NSArray *supportedNetworksProp = props[@"supportedNetworks"];
     NSMutableArray *supportedNetworks = [NSMutableArray array];
     for (NSString *supportedNetwork in supportedNetworksProp) {
-        [supportedNetworks addObject: supportedNetworksMapping[supportedNetwork]];
+        if ([supportedNetworksMapping objectForKey: supportedNetwork]) {
+            [supportedNetworks addObject: supportedNetworksMapping[supportedNetwork]];
+        }
     }
     
     return supportedNetworks;
