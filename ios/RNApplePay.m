@@ -33,7 +33,7 @@ RCT_EXPORT_METHOD(requestPayment:(NSDictionary *)props promiseWithResolver:(RCTP
     paymentRequest.currencyCode = props[@"currencyCode"];
     paymentRequest.supportedNetworks = [self getSupportedNetworks:props];
     paymentRequest.paymentSummaryItems = [self getPaymentSummaryItems:props];
-    
+
     self.viewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest: paymentRequest];
     self.viewController.delegate = self;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -151,6 +151,11 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status promiseWithResolver:(RCTPr
             if (self.completeResolve != NULL) {
                 self.completeResolve(nil);
                 self.completeResolve = NULL;
+            }
+
+            if (self.requestPaymentResolve != NULL) {
+                self.requestPaymentResolve(nil);
+                self.requestPaymentResolve = NULL;
             }
         }];
     });
