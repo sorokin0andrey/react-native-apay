@@ -33,7 +33,8 @@ RCT_EXPORT_METHOD(requestPayment:(NSDictionary *)props promiseWithResolver:(RCTP
     paymentRequest.currencyCode = props[@"currencyCode"];
     paymentRequest.supportedNetworks = [self getSupportedNetworks:props];
     paymentRequest.paymentSummaryItems = [self getPaymentSummaryItems:props];
-    paymentRequest.requiredShippingContactFields = [NSSet setWithArray:@[PKContactFieldName]];
+    // paymentRequest.requiredShippingContactFields = [NSSet setWithArray:@[PKContactFieldName]];
+    // paymentRequest.requiredBillingContactFields = [NSSet setWithArray:@[PKContactFieldName]];
     
     self.viewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest: paymentRequest];
     self.viewController.delegate = self;
