@@ -33,8 +33,7 @@ RCT_EXPORT_METHOD(requestPayment:(NSDictionary *)props promiseWithResolver:(RCTP
     paymentRequest.currencyCode = props[@"currencyCode"];
     paymentRequest.supportedNetworks = [self getSupportedNetworks:props];
     paymentRequest.paymentSummaryItems = [self getPaymentSummaryItems:props];
-    // paymentRequest.requiredShippingContactFields = [NSSet setWithArray:@[PKContactFieldName]];
-    // paymentRequest.requiredBillingContactFields = [NSSet setWithArray:@[PKContactFieldName]];
+    paymentRequest.requiredShippingContactFields = [NSSet setWithArray:@[PKContactFieldName]];
     
     self.viewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest: paymentRequest];
     self.viewController.delegate = self;
@@ -141,8 +140,13 @@ RCT_EXPORT_METHOD(complete:(NSNumber *_Nonnull)status promiseWithResolver:(RCTPr
 {
     self.completion = completion;
     if (self.requestPaymentResolve != NULL) {
+        // NSString *paymentData = [[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding];
+        NSMutableDictionary *paymentResponse = [[NSMutableDictionary alloc]initWithCapacity:6];
         NSString *paymentData = [[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding];
-        self.requestPaymentResolve(paymentData);
+        [paymentResponse setObject:paymentData forKey:@"paymentData"];
+        [paymentResponse setObject:payment.shippingContact.name.givenName forKey:@"firstName"];
+        [paymentResponse setObject:payment.shippingContact.name.familyName forKey:@"lastName"];
+        self.requestPaymentResolve(paymentResponse);
         self.requestPaymentResolve = NULL;
     }
 }

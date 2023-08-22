@@ -16,11 +16,17 @@ export interface APayRequestDataType {
   paymentSummaryItems: APayPaymentSummaryItemType[]
 }
 
+export interface APayResponseDataType {
+  firstName: string
+  lastName: string
+  paymentData: string
+}
+
 declare class ApplePay {
   static SUCCESS: APayPaymentStatusType
   static FAILURE: APayPaymentStatusType
   static canMakePayments: boolean
-  static requestPayment: (requestData: APayRequestDataType) => Promise<string|null>
+  static requestPayment: (requestData: APayRequestDataType) => Promise<APayResponseDataType|null>
   static complete: (status: APayPaymentStatusType) => Promise<void>
 }
 
