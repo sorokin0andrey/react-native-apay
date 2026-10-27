@@ -1,10 +1,19 @@
-import React, { Component } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import { ApplePay, APayRequestDataType, APayPaymentStatusType } from 'react-native-apay'
+import { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {
+  ApplePay,
+  type APayPaymentStatusType,
+  type APayRequestDataType,
+} from 'react-native-apay';
 
 const requestData: APayRequestDataType = {
   merchantIdentifier: 'merchant.com.payture.applepay.Busfor',
-  supportedNetworks: ['mastercard', 'visa'],
+  supportedNetworks: ['masterCard', 'visa'],
   countryCode: 'US',
   currencyCode: 'USD',
   paymentSummaryItems: [
@@ -13,43 +22,66 @@ const requestData: APayRequestDataType = {
       amount: '100.00',
     },
   ],
-}
+};
 
-export default class App extends Component {
+export default function App() {
+  const [statusText, setStatusText] = useState('Ready');
 
-  payWithApplePay = (status: APayPaymentStatusType) => {
-    // Check if ApplePay is available
-    if (ApplePay.canMakePayments) {
-      ApplePay.requestPayment(requestData)
-        .then((paymentData) => {
-          // In Sumilator always returns an empty string
-          console.log({ paymentData })
-          // Simulate a request to the gateway
-          setTimeout(() => {
-            // Show status to user ApplePay.SUCCESS || ApplePay.FAILURE
-            ApplePay.complete(status)
-              .then(() => {
-                console.log('completed')
-                // do something
-              })
-          }, 1000)
-        })
+  const pay = (status: APayPaymentStatusType) => {
+    if (!ApplePay.canMakePayments) {
+      setStatusText('Apple Pay is not available on this device');
+      return;
     }
-  }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to react-native-apay!</Text>
-        <TouchableOpacity style={styles.button} onPress={() => this.payWithApplePay(ApplePay.SUCCESS)}>
-          <Text style={styles.buttonText}>Buy with Apple Pay (SUCCESS)</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => this.payWithApplePay(ApplePay.FAILURE)}>
-          <Text style={styles.buttonText}>Buy with Apple Pay (FAILURE)</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+    ApplePay.requestPayment(requestData)
+      .then(paymentData => {
+        if (paymentData == null) {
+          setStatusText('Payment cancelled');
+          return;
+        }
+
+        console.log({ paymentData });
+        setTimeout(() => {
+          ApplePay.complete(status)
+            .then(() => {
+              setStatusText(
+                status === ApplePay.SUCCESS
+                  ? 'Payment completed'
+                  : 'Payment failed',
+              );
+            })
+            .catch((error: unknown) => {
+              setStatusText(
+                error instanceof Error
+                  ? error.message
+                  : 'Unable to complete payment',
+              );
+            });
+        }, 1000);
+      })
+      .catch((error: unknown) => {
+        setStatusText(
+          error instanceof Error ? error.message : 'Unable to start Apple Pay',
+        );
+      });
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.welcome}>Welcome to react-native-apay!</Text>
+      <Text style={styles.status}>{statusText}</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => pay(ApplePay.SUCCESS)}>
+        <Text style={styles.buttonText}>Buy with Apple Pay (SUCCESS)</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => pay(ApplePay.FAILURE)}>
+        <Text style={styles.buttonText}>Buy with Apple Pay (FAILURE)</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -58,10 +90,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
+    paddingHorizontal: 24,
   },
   welcome: {
     fontSize: 18,
     color: '#222',
+  },
+  status: {
+    marginTop: 12,
+    fontSize: 16,
+    color: '#555',
   },
   button: {
     marginTop: 24,

@@ -1,2 +1,8 @@
+example/
 Example/
 simulator.gif
+preview.gif
+preview.mp4
+coverage/
+.github/
+package-lock.json

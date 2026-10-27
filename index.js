@@ -1,17 +1,36 @@
+import { Platform } from 'react-native';
+import NativeRNApplePay from './src/NativeRNApplePay';
 
-import { NativeModules, Platform } from 'react-native';
-
-const { RNApplePay } = NativeModules;
-
-const throwError = () => {
-  throw new Error(`Google Pay is for Android only, use Platform.OS === 'android'`)
+const unsupported = () => {
+  throw new Error('Apple Pay is available on iOS only');
 };
 
-const mockAndroid = {
-  requestPayment: throwError,
-  complete: throwError,
+const unsupportedApplePay = {
+  canMakePayments: false,
+  SUCCESS: 0,
+  FAILURE: 1,
+  requestPayment: unsupported,
+  complete: unsupported,
 };
 
-const ApplePay = Platform.OS === 'ios' ? RNApplePay : mockAndroid
+function createApplePay() {
+  if (Platform.OS !== 'ios' || NativeRNApplePay == null) {
+    return unsupportedApplePay;
+  }
 
-export { ApplePay };
+  const constants = NativeRNApplePay.getConstants();
+
+  return {
+    canMakePayments: constants.canMakePayments,
+    SUCCESS: constants.SUCCESS,
+    FAILURE: constants.FAILURE,
+    requestPayment(requestData) {
+      return NativeRNApplePay.requestPayment(requestData);
+    },
+    complete(status) {
+      return NativeRNApplePay.complete(status);
+    },
+  };
+}
+
+export const ApplePay = createApplePay();
