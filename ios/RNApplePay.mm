@@ -44,13 +44,17 @@
                resolve:(RCTPromiseResolveBlock)resolve
                 reject:(RCTPromiseRejectBlock)reject
 {
-  NSDictionary *payload = @{
+  NSMutableDictionary *payload = [@{
     @"merchantIdentifier" : requestData.merchantIdentifier(),
     @"supportedNetworks" : requestData.supportedNetworks().unsafeRawValue(),
     @"countryCode" : requestData.countryCode(),
     @"currencyCode" : requestData.currencyCode(),
     @"paymentSummaryItems" : requestData.paymentSummaryItems().unsafeRawValue(),
-  };
+  } mutableCopy];
+  auto capabilities = requestData.merchantCapabilities();
+  if (capabilities.has_value()) {
+    payload[@"merchantCapabilities"] = capabilities->unsafeRawValue();
+  }
   [_impl requestPayment:payload resolve:resolve reject:reject];
 }
 

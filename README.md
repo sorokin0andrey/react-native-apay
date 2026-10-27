@@ -62,9 +62,10 @@ if (ApplePay.canMakePayments) {
       return;
     }
 
-    console.log(paymentData);
+    const payment = JSON.parse(paymentData);
+    console.log(payment.paymentMethod);
 
-    // Send paymentData to your payment processor, then settle the sheet.
+    // Send payment.paymentData to your payment processor, then settle the sheet.
     ApplePay.complete(ApplePay.SUCCESS).then(() => {
       console.log('completed');
     });
@@ -72,15 +73,17 @@ if (ApplePay.canMakePayments) {
 }
 ```
 
-`requestPayment` resolves with the payment token JSON, or with `null` when the payer cancels. Call `complete` with `ApplePay.SUCCESS` or `ApplePay.FAILURE` after authorization so the sheet can finish.
+`requestPayment` resolves with a JSON string, or with `null` when the payer cancels. The string contains `paymentData` (the Apple Pay token to send to your processor), `transactionIdentifier`, and `paymentMethod` (`displayName`, `network`, and `type`). Call `complete` with `ApplePay.SUCCESS` or `ApplePay.FAILURE` after authorization so the sheet can finish.
 
 `paymentSummaryItems[].amount` is a decimal string such as `'100.00'`. Set `pending: true` for a summary item whose amount is not final yet.
 
+`merchantCapabilities` is optional. When it is omitted, the request uses 3-D Secure. Pass `3DS` or `EMV` for the cryptographic protocol, and `Credit` or `Debit` to limit the card type. `InstantFundsOut` requires iOS 17. China UnionPay transactions generally need `EMV`.
+
 ### Supported networks
 
-`amex`, `masterCard`, `visa`, `privateLabel`, `discover`, `chinaUnionPay`, `interac`, `jcb`, `suica`, `carteBancaires`, `idcredit`, `quicpay`, `cartesBancaires`, `maestro`, `eftpos`, `electron`, `vPay`, `elo`, `girocard`, `mada`, `mir`.
+`amex`, `masterCard`, `visa`, `privateLabel`, `discover`, `chinaUnionPay`, `interac`, `jcb`, `suica`, `carteBancaires`, `idcredit`, `quicpay`, `cartesBancaires`, `maestro`, `eftpos`, `electron`, `vPay`, `elo`, `girocard`, `mada`, `mir`, `bancontact`, `barcode`, `dankort`, `nanaco`, `postFinance`, `waon`.
 
-`mastercard`, `privatelabel`, and `cartebancaires` are accepted as aliases.
+`mastercard`, `privatelabel`, `cartebancaires`, and `postfinance` are accepted as aliases. `bancontact` requires iOS 16, and `postFinance` requires iOS 16.4.
 
 ## Example
 

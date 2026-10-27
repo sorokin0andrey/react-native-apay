@@ -21,7 +21,20 @@ export type APayAllowedCardNetworkType =
   | 'girocard'
   | 'mada'
   | 'mir'
-  | 'vPay';
+  | 'vPay'
+  | 'bancontact'
+  | 'barcode'
+  | 'dankort'
+  | 'nanaco'
+  | 'postFinance'
+  | 'waon';
+
+export type APayMerchantCapability =
+  | '3DS'
+  | 'EMV'
+  | 'Credit'
+  | 'Debit'
+  | 'InstantFundsOut';
 
 export interface APayPaymentSummaryItemType {
   label: string;
@@ -31,6 +44,12 @@ export interface APayPaymentSummaryItemType {
 
 export interface APayRequestDataType {
   merchantIdentifier: string;
+  /**
+   * Cryptographic protocol and card type filter.
+   * At least one of `3DS` or `EMV` is required when this is set.
+   * Omit it to keep the default, 3-D Secure.
+   */
+  merchantCapabilities?: APayMerchantCapability[];
   supportedNetworks: APayAllowedCardNetworkType[];
   countryCode: string;
   currencyCode: string;

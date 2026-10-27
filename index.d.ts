@@ -2,6 +2,7 @@ import type { APayRequestDataType } from './src/NativeRNApplePay';
 
 export type {
   APayAllowedCardNetworkType,
+  APayMerchantCapability,
   APayPaymentSummaryItemType,
   APayRequestDataType,
 } from './src/NativeRNApplePay';

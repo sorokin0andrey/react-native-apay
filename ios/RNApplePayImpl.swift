@@ -70,7 +70,7 @@ public final class RNApplePayImpl: NSObject, PKPaymentAuthorizationViewControlle
     handler completion: @escaping (PKPaymentAuthorizationResult) -> Void
   ) {
     authorizationCompletion = completion
-    let paymentData = String(data: payment.token.paymentData, encoding: .utf8)
+    let paymentData = paymentResult(from: payment)
     let resolve = requestPaymentResolve
     requestPaymentResolve = nil
     resolve?(paymentData)
@@ -133,7 +133,7 @@ public final class RNApplePayImpl: NSObject, PKPaymentAuthorizationViewControlle
     }
 
     let request = PKPaymentRequest()
-    request.merchantCapabilities = .threeDSecure
+    request.merchantCapabilities = merchantCapabilities(from: requestData)
     request.merchantIdentifier = merchantIdentifier
     request.countryCode = countryCode
     request.currencyCode = currencyCode
@@ -162,6 +162,88 @@ public final class RNApplePayImpl: NSObject, PKPaymentAuthorizationViewControlle
     viewController = controller
     requestPaymentResolve = resolve
     presenter.present(controller, animated: true)
+  }
+
+  private func paymentResult(from payment: PKPayment) -> String? {
+    guard
+      let paymentData = String(data: payment.token.paymentData, encoding: .utf8),
+      let paymentDataBytes = paymentData.data(using: .utf8),
+      let paymentDataObject = try? JSONSerialization.jsonObject(with: paymentDataBytes)
+    else {
+      return String(data: payment.token.paymentData, encoding: .utf8)
+    }
+
+    let payload: [String: Any] = [
+      "paymentData": paymentDataObject,
+      "transactionIdentifier": payment.token.transactionIdentifier,
+      "paymentMethod": paymentMethodObject(payment.token.paymentMethod),
+    ]
+    guard
+      let data = try? JSONSerialization.data(withJSONObject: payload),
+      let json = String(data: data, encoding: .utf8)
+    else {
+      return paymentData
+    }
+    return json
+  }
+
+  private func paymentMethodObject(_ method: PKPaymentMethod) -> [String: String] {
+    var result = ["type": paymentMethodType(method.type)]
+    if let displayName = method.displayName {
+      result["displayName"] = displayName
+    }
+    if let network = method.network?.rawValue {
+      result["network"] = network
+    }
+    return result
+  }
+
+  private func paymentMethodType(_ type: PKPaymentMethodType) -> String {
+    switch type {
+    case .debit:
+      return "debit"
+    case .credit:
+      return "credit"
+    case .prepaid:
+      return "prepaid"
+    case .store:
+      return "store"
+    case .eMoney:
+      return "eMoney"
+    default:
+      return "unknown"
+    }
+  }
+
+  private func merchantCapabilities(from requestData: NSDictionary) -> PKMerchantCapability {
+    guard
+      let requested = requestData["merchantCapabilities"] as? [String],
+      !requested.isEmpty
+    else {
+      return .threeDSecure
+    }
+
+    var capabilities: PKMerchantCapability = []
+    if requested.contains("3DS") {
+      capabilities.insert(.threeDSecure)
+    }
+    if requested.contains("EMV") {
+      capabilities.insert(.emv)
+    }
+    if requested.contains("Credit") {
+      capabilities.insert(.credit)
+    }
+    if requested.contains("Debit") {
+      capabilities.insert(.debit)
+    }
+    if #available(iOS 17.0, *), requested.contains("InstantFundsOut") {
+      capabilities.insert(.instantFundsOut)
+    }
+
+    if !capabilities.contains(.threeDSecure) && !capabilities.contains(.emv) {
+      capabilities.insert(.threeDSecure)
+    }
+    return capabilities
   }
 
   private func supportedNetworks(from requestData: NSDictionary) -> [PKPaymentNetwork] {
@@ -210,30 +292,45 @@ public final class RNApplePayImpl: NSObject, PKPaymentAuthorizationViewControlle
     return top
   }
 
-  private static let networks: [String: PKPaymentNetwork] = [
-    "amex": .amex,
-    "masterCard": .masterCard,
-    "mastercard": .masterCard,
-    "visa": .visa,
-    "privateLabel": .privateLabel,
-    "privatelabel": .privateLabel,
-    "discover": .discover,
-    "chinaUnionPay": .chinaUnionPay,
-    "interac": .interac,
-    "jcb": .JCB,
-    "suica": .suica,
-    "carteBancaires": .carteBancaires,
-    "cartebancaires": .carteBancaires,
-    "idcredit": .idCredit,
-    "quicpay": .quicPay,
-    "cartesBancaires": .cartesBancaires,
-    "maestro": .maestro,
-    "eftpos": .eftpos,
-    "electron": .electron,
-    "vPay": .vPay,
-    "elo": .elo,
-    "girocard": .girocard,
-    "mada": .mada,
-    "mir": .mir,
-  ]
+  private static let networks: [String: PKPaymentNetwork] = {
+    var networks: [String: PKPaymentNetwork] = [
+      "amex": .amex,
+      "masterCard": .masterCard,
+      "mastercard": .masterCard,
+      "visa": .visa,
+      "privateLabel": .privateLabel,
+      "privatelabel": .privateLabel,
+      "discover": .discover,
+      "chinaUnionPay": .chinaUnionPay,
+      "interac": .interac,
+      "jcb": .JCB,
+      "suica": .suica,
+      "carteBancaires": .carteBancaires,
+      "cartebancaires": .carteBancaires,
+      "idcredit": .idCredit,
+      "quicpay": .quicPay,
+      "cartesBancaires": .cartesBancaires,
+      "maestro": .maestro,
+      "eftpos": .eftpos,
+      "electron": .electron,
+      "vPay": .vPay,
+      "elo": .elo,
+      "girocard": .girocard,
+      "mada": .mada,
+      "mir": .mir,
+      "barcode": .barcode,
+      "dankort": .dankort,
+      "nanaco": .nanaco,
+      "waon": .waon,
+    ]
+
+    if #available(iOS 16.0, *) {
+      networks["bancontact"] = .bancontact
+    }
+    if #available(iOS 16.4, *) {
+      networks["postFinance"] = .postFinance
+      networks["postfinance"] = .postFinance
+    }
+    return networks
+  }()
 }
