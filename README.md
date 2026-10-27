@@ -18,6 +18,12 @@ Accept payments with Apple Pay in React Native apps. The iOS implementation is a
 - iOS deployment target supported by your React Native version (15.1+ for React Native 0.88).
 - An Apple Pay merchant identifier and the Apple Pay capability on the app target.
 
+For React Native without the New Architecture, install the previous release:
+
+```sh
+npm install react-native-apay@1.3.1
+```
+
 Apple Pay is iOS-only. On other platforms `requestPayment` and `complete` throw.
 
 ## Installation
